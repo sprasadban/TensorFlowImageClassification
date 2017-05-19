@@ -1,0 +1,3 @@
+DataSets: http://www.vicos.si/Downloads/FIDS30
+kadenze.com/courses/creative-applications-of-deep-learning-with-tensorflow-iv/info
+Citation: http://www.vicos.si/Downloads/FIDS30
