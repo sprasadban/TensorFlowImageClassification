@@ -178,7 +178,7 @@ class ImageSelector:
             print(trainLength)
             testLength = int(round(imageFileLength * 0.15))
             print(testLength)            
-            self.trainingSet[key] = (imageFiles, classLabel)
+            self.trainingSet[key] = (imageFiles[:trainLength], classLabel)
             '''Validation set images based on positions'''        
             #self.validationSet[key] = (self.__getValidationSetImages(imageFiles), classLabel)
             '''Test set images based on positions'''        
