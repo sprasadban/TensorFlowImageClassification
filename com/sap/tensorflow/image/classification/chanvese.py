@@ -34,6 +34,8 @@ import scipy.ndimage as nd
 import matplotlib.pyplot as plt
 from PIL import Image
 import scipy.misc as sc
+import os
+from datashape.coretypes import int32
 
 eps = np.finfo(float).eps
 
@@ -265,26 +267,40 @@ def convergence(p_mask, n_mask, thresh, c):
     return c
 
 
-if __name__ == "__main__":
-    #img = nd.imread('brain.png', flatten=True)
-    #mask = np.zeros(img.shape)
-    #mask[20:100, 20:100] = 1
+def filter(img):
+    #Take greyscale image of 256 * 192
+    result = img
+    result = nd.sobel(result)
+    result = nd.prewitt(result)
+    result = nd.median_filter(result, size=20)
     
-   
-    imagepath = 'apple.jpg'
-    newimagepath = 'greyapple.jpg'
+    #Eliminate grey areas more than 190 these are white areas
+    mask1 = result > 190
+    mask1 = (mask1 != True)
+    mask1 = mask1 * 1
+    result = result * mask1
     
-    # read image and convert to greyscale
-    greyImg = nd.imread(imagepath, flatten=True)
-    gryImgOriginal = greyImg;
+    #Return greyscale image of 256 * 192
+    img = Image.fromarray(result)
+    return img.convert('L')
+
+def invokeChanvese(originalImage, filteredImage, infilename, filePathToSave):
+    '''
+    gryImgOriginal = nd.imread(originalImage, flatten=True);    
+    greyImg = nd.imread(filteredImage, flatten=True)
+    '''
+    gryImgOriginal = np.asarray(originalImage, dtype="int32")    
+    greyImg = np.asarray(filteredImage, dtype="int32")    
     print(gryImgOriginal.shape)
     print(greyImg.shape)
     mask=  np.zeros(greyImg.shape)
     print(mask.shape)
    
     
+    
     #define initial boundary of the mask
-    mask[10:(mask.shape[0]-10), 10:(mask.shape[1]-10)] = 1
+    padding=30
+    mask[padding:(mask.shape[0]-padding), padding:(mask.shape[1]-padding)] = 1
     
     #define iterations that best fits the object , alpha defines smoothening its value ranges from 0-1
     #display = true to display the iterrations
@@ -297,6 +313,19 @@ if __name__ == "__main__":
     finalMask = seg[0] * 1;
     #do element wise multiplication to eliminate the background
     finalImg = np.multiply(gryImgOriginal,finalMask)
+    filename = infilename[infilename.rindex('\\')+1 : infilename.rindex('.')]
+    extension = infilename[infilename.rindex('.'):]
+    imageFileName = filename + '_seg' + extension  
+    segmentedFilePath = os.path.join(filePathToSave, imageFileName)   
+    
+    sc.imsave(segmentedFilePath, finalImg)    
     #sc.imsave('C:\\Users\\I329687\\Desktop\\output\\masked.png', finalImg)
     # you can find the image in the workspace project folder
-    sc.imsave('masked.png', finalImg)
+    return segmentedFilePath
+
+
+if __name__ == "__main__":
+    imageFile = 'C:\\shiva\\PhD\\Workspace\\DIP\\DIP\\com\\sap\\tensorflow\\image\\classification\\sweet_melon.jpg'
+    imagePathtoSave = 'C:\\shiva\\PhD\\Workspace\\DIP\\DIP\\com\\sap\\tensorflow\\image\\classification'
+    finalImg = invokeChanvese(imageFile, imagePathtoSave)
+    

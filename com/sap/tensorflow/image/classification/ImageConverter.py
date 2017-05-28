@@ -4,6 +4,7 @@ from PIL import ImageFilter
 import numpy as np
 import os
 from tensorflow.contrib.slim.python.slim.data import dataset
+#import chanvese
 
 class ImageConverter:
     def __init__(self):
@@ -14,7 +15,26 @@ class ImageConverter:
         img.load()
         data = np.asarray(img, dtype="int32")
         return data
-        
+ 
+    ''' Invoke when needed chanvese segmentation --> Needs scikit
+    def doImagePreprocessing(self, filePath):
+        for root, dirs, files in os.walk(filePath, topdown=False):
+            for name in files:
+                filePathToSave = root + '\\output\\'
+                #Create directory if not exists
+                directory = os.path.dirname(filePathToSave)
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                imageFile = os.path.join(root, name)
+                if (imageFile.endswith(".jpg") or imageFile.endswith(".png")) == True:
+                    cnvFilePath = self.__convertImageToGreyScale(imageFile, filePathToSave)
+                    (resizedFileName, resizeImg) = self.__resizeImage(cnvFilePath, filePathToSave, False, 256, 192)
+                    filteredImg = chanvese.filter(resizeImg)
+                    #Overwrite image after applying filter
+                    segmentedFilePath = chanvese.invokeChanvese(resizeImg, filteredImg, resizedFileName, filePathToSave)
+                    (resizedFileName, resizeImg) = self.__resizeImage(segmentedFilePath, filePathToSave, True) 
+    '''
+                           
     def doImagePreprocessing(self, filePath):
         for root, dirs, files in os.walk(filePath, topdown=False):
             for name in files:

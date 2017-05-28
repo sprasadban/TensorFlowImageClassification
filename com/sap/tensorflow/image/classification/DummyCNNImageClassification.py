@@ -112,9 +112,9 @@ if __name__ == '__main__':
     '''C:\\Supermarket_Produce_Dataset\\Fruits'''
     parser.add_argument('--data_dir', type=str, default='C:\\Supermarket_Produce_Dataset\\Fruits', help='Directory for storing input data')
     parser.add_argument('--filter_file', type=str, default='_seg_com, _com', help='Directory for storing input data')    
-    parser.add_argument('--max_steps', type=int, default=15000, help='Number of steps to run trainer.')
+    parser.add_argument('--max_steps', type=int, default=20000, help='Number of steps to run trainer.')
     parser.add_argument('--image_count', type=int, default=1671, help='Number of images to run trainer.')    
-    parser.add_argument('--training_batch', type=int, default=50, help='Successive batch rate') 
+    parser.add_argument('--training_batch', type=int, default=150, help='Successive batch rate') 
     parser.add_argument('--learning_rate', type=float, default=1e-4, help='Learning rate')       
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
